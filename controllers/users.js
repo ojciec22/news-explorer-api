@@ -43,15 +43,7 @@ const login = (req, res, next) => {
     .then((user) => {
       // создадим токен
       const token = jwt.sign({ _id: user._id }, NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret', { expiresIn: '7d' });
-      res
-        .cookie('jwt', token, {
-          maxAge: 3600000 * 24 * 7,
-          httpOnly: true,
-          sameSite: true,
-          // указать браузеру, чтобы тот посылал куки, только если запрос сделан с того же домена
-        })
-        .end(); // если у ответа нет тела, можно использовать метод end
-      // res.send({ token });
+      res.send({ token });
     })
     .catch(next);
 };
