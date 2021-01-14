@@ -7,7 +7,7 @@ const { NODE_ENV, JWT_SECRET } = process.env;
 module.exports = (req, res, next) => {
   const { authorization } = req.headers;
   if (!authorization || !authorization.startsWith('Bearer ')) {
-    throw new Unauthorized('Ошибка авторизации');
+    throw new Unauthorized('Ошибка авторизации!');
   }
 
   const token = authorization.replace('Bearer ', '');

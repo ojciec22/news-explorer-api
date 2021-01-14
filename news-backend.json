@@ -1,0 +1,9 @@
+{
+	"apps": [
+		{
+			"name": "news-backend",
+			"script": "npm",
+			"args": "start"
+		}
+	]
+}

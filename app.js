@@ -14,7 +14,7 @@ const routes = require('./routes');
 const errorHandler = require('./middlewares/error-handler');
 const { DB } = require('./config');
 
-const { PORT = 3000 } = process.env;
+const { PORT = 3002 } = process.env;
 const app = express();
 
 // подключаемся к серверу mongo
