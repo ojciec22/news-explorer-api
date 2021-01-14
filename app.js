@@ -37,11 +37,7 @@ app.use(limiter); // отсекает запросы в определенный
 app.use(helmet()); // для установки заголовков безопасности
 
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true })); // для URL-кодированных
-// запросов. extended: true указывает, что объект req.body будет содержать
-// значения любого типа, а не только строки.
-// application/x-www-form-urlencoded — формат, который кодирует поля формы
-// так, чтобы их можно было отправить в URL; для поста форм?
+app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use(cookieParser());
 
