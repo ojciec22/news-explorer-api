@@ -9,16 +9,17 @@ const { errors } = require('celebrate');
 
 const limiter = require('./middlewares/limiter');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
+const { serverDown } = require('./constants/constants');
 
 const routes = require('./routes');
 const errorHandler = require('./middlewares/error-handler');
 const { DB } = require('./config');
 
-const { PORT = 3002 } = process.env;
+const { PORT = 3000, NODE_ENV, DATABASE_URL } = process.env;
 const app = express();
 
 // подключаемся к серверу mongo
-mongoose.connect(DB, {
+mongoose.connect(NODE_ENV === 'production' ? DATABASE_URL : DB, {
   useNewUrlParser: true,
   useCreateIndex: true,
   useFindAndModify: false,
@@ -28,7 +29,7 @@ mongoose.connect(DB, {
 app.use(cors());
 app.get('/crash-test', () => {
   setTimeout(() => {
-    throw new Error('Сервер сейчас упадёт');
+    throw new Error(serverDown);
   }, 0);
 });
 
@@ -49,4 +50,5 @@ app.use(errorLogger);
 
 app.use(errorHandler);
 
+// eslint-disable-next-line no-console
 app.listen(PORT, () => console.log(`Listening to port: ${PORT}`));

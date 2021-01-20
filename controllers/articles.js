@@ -1,5 +1,6 @@
 const Article = require('../models/article');
 const { NotFoundError, BadRequest, Forbidden } = require('../errors');
+const { notFoundData, notFoundArticleId, noRigtsToDelete } = require('../constants/constants');
 
 const getArticles = (req, res, next) => {
   Article.find({ owner: req.user._id })
@@ -15,26 +16,41 @@ const createArticle = (req, res, next) => {
     keyword, title, text, date, source, link, image, owner: req.user._id,
   })
     .catch((err) => {
-      if (err.name === 'ValidationError') {
+      if (err.statusCode === 'ValidationError') {
         next(new BadRequest(`${Object.values(err.errors).map((error) => error.message).join(', ')}`));
       } else {
         next(err);
       }
     })
-    .then((article) => res.send({ data: article }))
+    .then((article) => res.send({
+      data: {
+        _id: article._id,
+        keyword: article.keyword,
+        title: article.title,
+        text: article.text,
+        date: article.date,
+        source: article.source,
+        link: article.link,
+        image: article.image,
+      },
+    }))
     .catch(next);
 };
 
 const deleteArticle = (req, res, next) => {
   Article.findById(req.params.articleId).select('+owner')
-    .orFail(() => new NotFoundError('Скорее всего данные уже были удалены ранее'))
+    .orFail(() => new NotFoundError(notFoundData))
+    .catch((err) => {
+      if (err.kind === 'ObjectId') {
+        throw new NotFoundError(notFoundArticleId);
+      }
+    })
     .then((article) => {
       if (article.owner.toString() !== req.user._id.toString()) {
-        throw new Forbidden('Нет прав на удаление статьи');
+        throw new Forbidden(noRigtsToDelete);
       }
       Article.findByIdAndRemove(req.params.articleId)
-        .then(() => res.send({ data: article }))
-        .catch(next);
+        .then(() => res.send({ data: article }));
     })
     .catch(next);
 };

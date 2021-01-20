@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
-// eslint-disable-next-line no-useless-escape
-const test = /^(http(s)?:\/\/)?(www\.)?[\w-]+\.[\/()\w.:,-]+#?/;
+const { linksTestValidation } = require('../constants/constants');
+const { wrongLink, wrongLinkImg } = require('../constants/constants');
 
 const articleSchema = new mongoose.Schema({
   keyword: {
@@ -23,16 +23,16 @@ const articleSchema = new mongoose.Schema({
     type: String,
     required: true,
     validate: {
-      validator: (v) => test.test(v),
-      message: 'Неправильная ссылка',
+      validator: (v) => linksTestValidation.test(v),
+      message: wrongLink,
     },
   },
   image: {
     type: String,
     required: true,
     validate: {
-      validator: (v) => test.test(v),
-      message: 'Неправильный адрес картинки',
+      validator: (v) => linksTestValidation.test(v),
+      message: wrongLinkImg,
     },
   },
   owner: {

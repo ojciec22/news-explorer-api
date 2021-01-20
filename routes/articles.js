@@ -1,7 +1,6 @@
 const router = require('express').Router();
 const { celebrate, Joi } = require('celebrate');
-// eslint-disable-next-line no-useless-escape
-const test = /^(http(s)?:\/\/)?(www\.)?[\w-]+\.[\/()\w.:,-]+#?/;
+const { linksTestValidation } = require('../constants/constants');
 
 const {
   getArticles, createArticle, deleteArticle,
@@ -16,14 +15,14 @@ router.post('/articles', celebrate({
     text: Joi.string().required(),
     date: Joi.string().required(),
     source: Joi.string().required(),
-    link: Joi.string().required().regex(test),
-    image: Joi.string().required().regex(test), // .uri(),
+    link: Joi.string().required().regex(linksTestValidation),
+    image: Joi.string().required().regex(linksTestValidation),
   }),
 }), createArticle);
 
 router.delete('/articles/:articleId', celebrate({
   params: Joi.object().keys({
-    articleId: Joi.string().required(),
+    articleId: Joi.string().required().length(24).hex(),
   }),
 }), deleteArticle);
 

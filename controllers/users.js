@@ -2,11 +2,12 @@ const { NODE_ENV, JWT_SECRET } = process.env;
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
-const { BadRequest, NotFoundError } = require('../errors');
+const { Conflict, NotFoundError } = require('../errors');
+const { noUser, userEmailAlredyRegister } = require('../constants/constants');
 
 const getUser = (req, res, next) => {
   User.findById(req.user._id)
-    .orFail(new NotFoundError('Пользователь не обнаружен'))
+    .orFail(new NotFoundError(noUser))
     .then((user) => res.send({ user: user.name, email: user.email }))
     .catch(next);
 };
@@ -28,7 +29,7 @@ const createUser = (req, res, next) => {
     }))
     .catch((err) => {
       if (err.code === 11000) {
-        throw new BadRequest('Пользователь с таким email уже зарегистрирован');
+        throw new Conflict(userEmailAlredyRegister);
       } else {
         next(err);
       }
