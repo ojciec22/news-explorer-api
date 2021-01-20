@@ -1,6 +1,6 @@
 const Article = require('../models/article');
 const { NotFoundError, BadRequest, Forbidden } = require('../errors');
-const { notFoundData, notFoundArticleId, noRigtsToDelete } = require('../constants/constants');
+const { notFoundArticleId, noRigtsToDelete } = require('../constants/constants');
 
 const getArticles = (req, res, next) => {
   Article.find({ owner: req.user._id })
@@ -39,12 +39,7 @@ const createArticle = (req, res, next) => {
 
 const deleteArticle = (req, res, next) => {
   Article.findById(req.params.articleId).select('+owner')
-    .orFail(() => new NotFoundError(notFoundData))
-    .catch((err) => {
-      if (err.kind === 'ObjectId') {
-        throw new NotFoundError(notFoundArticleId);
-      }
-    })
+    .orFail(() => new NotFoundError(notFoundArticleId))
     .then((article) => {
       if (article.owner.toString() !== req.user._id.toString()) {
         throw new Forbidden(noRigtsToDelete);
