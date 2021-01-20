@@ -1,4 +1,0 @@
-NODE_ENV=production
-JWT_SECRET=2c1abc0c70d66bfeaa627cfc279fc6b3be20abee5af7de0950aa1cb8615347c8
-DATABASE_URL='mongodb://localhost:27017/newsdb'
-
