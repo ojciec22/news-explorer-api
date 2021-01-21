@@ -9,8 +9,8 @@ const wrongLinkImg = 'Неправильный адрес картинки';
 const wrongMailOrPassword = 'Неправильные почта или пароль';
 const wrongEmail = 'Неправильный адрес e-mail';
 const serverDown = 'Сервер сейчас упадёт';
-// eslint-disable-next-line no-useless-escape
-const linksTestValidation = /^(http(s)?:\/\/)?(www\.)?[\w-]+\.[\/()\w.:,-]+#?/;
+
+const linksTestValidation = /^(http(s)?:\/\/)?(www\.)?[\w-]+\.[/()\w.:,-]+#?/;
 
 module.exports = {
   notFoundData,
